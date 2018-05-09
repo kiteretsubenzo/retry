@@ -1,0 +1,24 @@
+﻿//========================================================================
+// This conversion was produced by the Free Edition of
+// C++ to C# Converter courtesy of Tangible Software Solutions.
+// Order the Premium Edition at https://www.tangiblesoftwaresolutions.com
+//========================================================================
+
+public static class GlobalMembers
+{
+	static internal char[] Pawn_CHAR = {'h', 'y', 'e', 'g', 'u', 'r', 'k', 'o', 'H', 'Y', 'E', 'G', 'U', 'R', 'n'};
+
+    static internal string[] Pawn_KANJI = { "歩", "杏", "桂", "銀", "角", "飛", "金", "玉", "と", "令", "介", "全", "馬", "龍" };
+
+    static internal sbyte[] charToPawn = {PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.KEIN, PawnDef.NONE, PawnDef.GINN, PawnDef.HUN, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.RYU, PawnDef.NONE, PawnDef.NONE, PawnDef.UMA, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.KYOHN, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.KEI, PawnDef.NONE, PawnDef.GIN, PawnDef.HU, PawnDef.NONE, PawnDef.NONE, PawnDef.KIN, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.GYOKU, PawnDef.NONE, PawnDef.NONE, PawnDef.HI, PawnDef.NONE, PawnDef.NONE, PawnDef.KAKU, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.KYOH, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE, PawnDef.NONE};
+
+    static internal string[] numberToZenkaku = { "９", "８", "７", "６", "５", "４", "３", "２", "１" };
+
+    static internal string[] numberToKanji = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+
+    //C++ TO C# CONVERTER TODO TASK: The implementation of the following method could not be found:
+    static internal Score SCORE_NONE = new Score(Score.SCORE_UNVALUED);
+
+    //C++ TO C# CONVERTER TODO TASK: The following statement was not recognized, possibly due to an unrecognized macro:
+    static internal Move MOVE_ZERO = new Move(PawnDef.NONE, 0, 0, 0, 0, PawnDef.NONE, PawnDef.NONE, false, 99999);
+}
