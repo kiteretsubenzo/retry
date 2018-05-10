@@ -90,7 +90,7 @@ public abstract class Worker
 			this.moves = movesValue;
 //C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
 //ORIGINAL LINE: this.score = scoreValue;
-			this.score = new Score(GlobalMembers.SCORE_NONE);
+			this.score = new Score(scoreValue);
 		}
 	}
 
@@ -134,15 +134,15 @@ public abstract class Worker
 		}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
-//ORIGINAL LINE: void GetHistory(ClassicLinkedList<Move> &moveList) const
-		public void GetHistory(LinkedList<Move> moveList)
+//ORIGINAL LINE: void GetHistory(ScoreMoveList &moveList) const
+		public void GetHistory(ScoreMoveList moveList)
 		{
-			moveList.Clear();
+			moveList.clear();
 			for (uint i = 0; i < size(); i++)
 			{
 				if (0 < nodeStack[i].moves.size())
 				{
-					moveList.AddLast(nodeStack[i].moves.front());
+					moveList.push_back(nodeStack[i].moves.front());
 				}
 			}
 		}
@@ -169,7 +169,7 @@ public abstract class Worker
 		}
 
 		private Node[] nodeStack = new Node[64];
-		private int index = 0;
+		private int index = -1;
 	}
 
 	private enum STATE

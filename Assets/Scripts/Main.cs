@@ -52,6 +52,7 @@ first";
 
         ai.GetResult(out aiScore);
         Debug.Log((string)aiScore);
+        Debug.Log(aiScore.moveList.DebugString());
     }
 
     private Ai ai;
