@@ -8,7 +8,6 @@ using System;
 
 using uchar = System.SByte;
 using Pawn = System.SByte;
-using Player = System.SByte;
 
 public class Move
 {
@@ -281,5 +280,3 @@ public class Move
 
 	public int MOVES_MAX = (BoardDef.WIDTH + BoardDef.HEIGHT - 2) * BoardDef.WIDTH * BoardDef.HEIGHT * 2 + (PawnDef.CAPTURE_MAX - 1) * BoardDef.WIDTH * BoardDef.HEIGHT;
 }
-
-
