@@ -24,14 +24,12 @@ public class ScoreMoveList
 		moveList[index] = move;
 	}
 
-    public void copy(ScoreMoveList moveListValue)
-    {
-        for(int i=0; i<moveListValue.size(); i++)
-        {
-            moveList[i] = moveListValue.moveList[i];
-        }
-        index = moveListValue.index;
-    }
+	public void copy(ScoreMoveList moveListValue)
+	{
+//C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
+        Array.Copy(moveListValue.moveList, moveList, moveListValue.size());
+		index = moveListValue.index;
+	}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: uint size() const
@@ -85,14 +83,16 @@ public class ScoreMoveList
 		return false;
 	}
 
-    public static bool operator >(ScoreMoveList ImpliedObject, ScoreMoveList rhs)
-    {
-        return !(ImpliedObject < rhs) && ImpliedObject != rhs;
-    }
+//C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
+//ORIGINAL LINE: bool operator >(const ScoreMoveList& rhs) const
+	public static bool operator > (ScoreMoveList ImpliedObject, ScoreMoveList rhs)
+	{
+		return !(ImpliedObject < rhs) && ImpliedObject != rhs;
+	}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool operator ==(const ScoreMoveList& rhs) const
-    public static bool operator == (ScoreMoveList ImpliedObject, ScoreMoveList rhs)
+	public static bool operator == (ScoreMoveList ImpliedObject, ScoreMoveList rhs)
 	{
 		if (ImpliedObject.index != rhs.index)
 		{
@@ -109,14 +109,16 @@ public class ScoreMoveList
 		return true;
 	}
 
-    public static bool operator !=(ScoreMoveList ImpliedObject, ScoreMoveList rhs)
-    {
-        return !(ImpliedObject == rhs);
-    }
+//C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
+//ORIGINAL LINE: bool operator !=(const ScoreMoveList& rhs) const
+	public static bool operator != (ScoreMoveList ImpliedObject, ScoreMoveList rhs)
+	{
+		return !(ImpliedObject == rhs);
+	}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: string toJson() const
-    public string toJson()
+	public string toJson()
 	{
 		string str = "moves:[";
 		if (0 < size())
@@ -160,40 +162,50 @@ public class Score
 	public int score;
 	public ScoreMoveList moveList = new ScoreMoveList();
 
-    public Score(Score scoreValue)
-    {
-        score = scoreValue.score;
-        //moveList = scoreValue.moveList;
-        moveList.copy(scoreValue.moveList);
-    }
+	public Score()
+	{
+		score = SCORE_UNVALUED;
+		moveList.clear();
+	}
 
-    public Score(int scoreValue)
+	public Score(Score scoreValue)
+	{
+		score = scoreValue.score;
+		moveList.copy(scoreValue.moveList);
+	}
+
+	public Score(int scoreValue)
 	{
 		score = scoreValue;
+		moveList.clear();
 	}
 
 	public Score(int scoreValue, ScoreMoveList moveListValue)
 	{
 		score = scoreValue;
-//C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
-//ORIGINAL LINE: moveList = moveListValue;
-		//moveList = moveListValue;
-        moveList.copy(moveListValue);
-    }
+		moveList.copy(moveListValue);
+	}
 
 	public Score(string json)
 	{
 		Dictionary<string, string> strs = Json.fromJson(json);
 		score = Convert.ToInt32(strs["score"]);
 		LinkedList<string> moves = Json.fromJsonArray(strs["moves"]);
-
+		moveList.clear();
         LinkedListNode<string> ite = moves.First;
+
         while( ite != null )
 		{
 //C++ TO C# CONVERTER TODO TASK: Iterators are only converted within the context of 'while' and 'for' loops:
 			moveList.push_back(new Move(ite.Value));
             ite = ite.Next;
 		}
+	}
+
+	public void setScore(int scoreValue)
+	{
+		score = scoreValue;
+		moveList.clear();
 	}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
@@ -204,6 +216,12 @@ public class Score
 		str += "score:" + Convert.ToString(score);
 		str += "," + moveList.toJson();
 		return str + "}";
+	}
+
+	public void clear()
+	{
+		score = SCORE_UNVALUED;
+		moveList.clear();
 	}
 
 	public static Score Min(Score lhs, Score rhs)
@@ -284,6 +302,14 @@ public class Score
 	public static bool operator >= (Score ImpliedObject, Score rhs)
 	{
 		return ImpliedObject > rhs || ImpliedObject == rhs;
+	}
+
+//C++ TO C# CONVERTER NOTE: This 'CopyFrom' method was converted from the original copy assignment operator:
+//ORIGINAL LINE: void operator =(const Score& rhs)
+	public void CopyFrom(Score rhs)
+	{
+		score = rhs.score;
+		moveList.copy(rhs.moveList);
 	}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:

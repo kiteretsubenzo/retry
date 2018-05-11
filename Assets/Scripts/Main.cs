@@ -1,20 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Main : MonoBehaviour {
+
+    public GameObject[] Pawns;
+    public GameObject CellPrefab;
+    public GameObject CellsParent;
+
+    public const int BOARD_WIDTH = 9;
+    public const int BOARD_HEIGHT = 9;
 
 	// Use this for initialization
 	void Start () {
         ai = new Ai();
         ai.AddWorker(ref ai);
 
-        StartCoroutine("Search");
+        float cellSize = 0.2f;
+        for(int j=0; j<BOARD_HEIGHT; j++)
+        {
+            for(int i=0; i<BOARD_WIDTH; i++)
+            {
+                float x = cellSize * i;
+                float z = cellSize * -j;
+                x -= cellSize * BOARD_WIDTH / 2.0f - cellSize / 2.0f;
+                z += cellSize * BOARD_HEIGHT / 2.0f - cellSize / 2.0f;
+                GameObject cell = Instantiate(CellPrefab, new Vector3(x, 0.01f, z), Quaternion.identity) as GameObject;
+                cell.name = "Cell(" + (i+1) + "," + (j+1) + ")";
+                cell.transform.parent = CellsParent.transform;
+            }
+        }
+
+        //StartCoroutine("Search");
     }
 	
 	// Update is called once per frame
 	void Update () {
         
+    }
+
+    public void ClickCell(GameObject target)
+    {
+        Debug.Log("click " + target.name);
     }
 
     private IEnumerator Search()

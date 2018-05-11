@@ -11,13 +11,13 @@ using Pawn = System.SByte;
 
 public class Move
 {
-	public class MOVE_Pawn
+	public class MovePawn
 	{
 		public uchar x = new uchar();
 		public uchar y = new uchar();
 		public Pawn pawn = new Pawn();
 
-		public MOVE_Pawn()
+		public MovePawn()
 		{
 			x = 0;
 			y = 0;
@@ -25,21 +25,21 @@ public class Move
 		}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
-//ORIGINAL LINE: bool operator ==(const MOVE_Pawn& rhs) const
-		public static bool operator == (MOVE_Pawn ImpliedObject, MOVE_Pawn rhs)
+//ORIGINAL LINE: bool operator ==(const MovePawn& rhs) const
+		public static bool operator == (MovePawn ImpliedObject, MovePawn rhs)
 		{
 			return (ImpliedObject.x == rhs.x && ImpliedObject.y == rhs.y && ImpliedObject.pawn == rhs.pawn);
 		}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
-//ORIGINAL LINE: bool operator !=(const MOVE_Pawn& rhs) const
-		public static bool operator != (MOVE_Pawn ImpliedObject, MOVE_Pawn rhs)
+//ORIGINAL LINE: bool operator !=(const MovePawn& rhs) const
+		public static bool operator != (MovePawn ImpliedObject, MovePawn rhs)
 		{
 			return !(ImpliedObject == rhs);
 		}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
-//ORIGINAL LINE: bool operator <(const MOVE_Pawn& rhs) const
-		public static bool operator < (MOVE_Pawn ImpliedObject, MOVE_Pawn rhs)
+//ORIGINAL LINE: bool operator <(const MovePawn& rhs) const
+		public static bool operator < (MovePawn ImpliedObject, MovePawn rhs)
 		{
 			if (ImpliedObject.x > rhs.x)
 			{
@@ -71,16 +71,16 @@ public class Move
 			return false;
 		}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
-//ORIGINAL LINE: bool operator >(const MOVE_Pawn& rhs) const
-		public static bool operator > (MOVE_Pawn ImpliedObject, MOVE_Pawn rhs)
+//ORIGINAL LINE: bool operator >(const MovePawn& rhs) const
+		public static bool operator > (MovePawn ImpliedObject, MovePawn rhs)
 		{
 			return !(ImpliedObject < rhs) && ImpliedObject != rhs;
 		}
 	}
 
 	public Pawn reserve = new Pawn();
-	public MOVE_Pawn from = new MOVE_Pawn();
-	public MOVE_Pawn to = new MOVE_Pawn();
+	public MovePawn from = new MovePawn();
+	public MovePawn to = new MovePawn();
 	public bool upgrade = false;
 	public int priority = 0;
 
@@ -89,8 +89,8 @@ public class Move
 		this.reserve = PawnDef.NONE;
 		this.upgrade = false;
 		this.priority = 0;
-		from = new MOVE_Pawn();
-		to = new MOVE_Pawn();
+		from = new MovePawn();
+		to = new MovePawn();
 	}
 
 	public Move(Pawn reserveValue, uchar fromx, uchar fromy, uchar tox, uchar toy, Pawn fromPawn, Pawn toPawn, bool upgradeValue, int priorityValue)

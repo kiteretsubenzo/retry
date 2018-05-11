@@ -65,32 +65,24 @@ public abstract class Worker
 
 
 	private const int DEEP_MAX = 64;
+	private MoveList moveListTmp = new MoveList();
+	private Score scoreTmp = new Score();
 
 	private class Node
 	{
 		public MoveList moves = new MoveList();
-		public Score score;
+		public Score score = new Score();
 
 		public Node()
 		{
-			this.score = new Score(GlobalMembers.SCORE_NONE);
 			moves.clear();
+			score.clear();
 		}
-		public Node(MoveList movesValue)
+
+		public void setMoves(MoveList movesValue)
 		{
-//C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
-//ORIGINAL LINE: this.moves = movesValue;
-			this.moves = movesValue;
-			this.score = new Score(GlobalMembers.SCORE_NONE);
-		}
-		public Node(MoveList movesValue, Score scoreValue)
-		{
-//C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
-//ORIGINAL LINE: this.moves = movesValue;
-			this.moves = movesValue;
-//C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
-//ORIGINAL LINE: this.score = scoreValue;
-			this.score = new Score(scoreValue);
+			moves.copy(movesValue);
+			score.clear();
 		}
 	}
 
@@ -98,6 +90,10 @@ public abstract class Worker
 	{
 		public NodeStack()
 		{
+            for( int i=0; i<nodeStack.Length; i++ )
+            {
+                nodeStack[i] = new Node();
+            }
 		}
 
 		public void clear()
@@ -109,6 +105,12 @@ public abstract class Worker
 		{
 			index++;
 			nodeStack[index] = node;
+		}
+
+		public void push_back(MoveList moveList)
+		{
+			index++;
+			nodeStack[index].setMoves(moveList);
 		}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
@@ -182,7 +184,8 @@ public abstract class Worker
 
 	private string jobId = "";
 	private bool debug = true;
-	private Score window = new Score(GlobalMembers.SCORE_NONE);
+	private Score window = new Score();
+	private Score windowNega = new Score();
 	private uint deep = 0;
 	private bool limit = false;
 
@@ -214,8 +217,9 @@ public abstract class Worker
 		}
 		else
 		{
-			window = new Score(GlobalMembers.SCORE_NONE);
+			window.clear();
 		}
+		windowNega = window.Negate();
 
 		deep = uint.Parse(deepStr);
 		limit = (limitStr == "true");
@@ -224,7 +228,9 @@ public abstract class Worker
 		// ルート
 		nodeStack.push_back(new Node());
 		// 自分
-		nodeStack.push_back(new Node(board.GetMoveList()));
+		MoveList moveList = new MoveList();
+		board.GetMoveList(moveList);
+		nodeStack.push_back(moveList);
 	}
 
 	private bool SearchImplementation()
@@ -248,10 +254,10 @@ public abstract class Worker
 				board.Forward(childItr.moves.front());
 
 				// 着手を取得
-				MoveList moveList = board.GetMoveList();
+				board.GetMoveList(moveListTmp);
 
 				// 新しい盤面に着手が無かったら勝負あり
-				if (moveList.empty())
+				if (moveListTmp.empty())
 				{
 					childItr.score.score = Score.SCORE_WIN;
 					nodeStack.GetHistory(childItr.score.moveList);
@@ -265,17 +271,17 @@ public abstract class Worker
 					nodeStack.GetHistory(childItr.score.moveList);
 
 					// 親ノードに得点をマージ
-					Score score = new Score(board.GetEvaluate(moveList));
-					if (limit == false || window.Negate() <= childItr.score)
+					if (limit == false || windowNega <= childItr.score)
 					{
-						childItr.score = Score.Min(childItr.score, score.Negate());
+						scoreTmp.setScore(board.GetEvaluate(moveListTmp));
+						childItr.score = Score.Min(childItr.score, scoreTmp.Negate());
 					}
 
 					break;
 				}
 
 				// 子供を追加してもう一回
-				nodeStack.push_back(new Node(moveList));
+				nodeStack.push_back(moveListTmp);
 			}
 
 			// back
@@ -293,7 +299,7 @@ public abstract class Worker
 				if (2 <= nodeStack.size())
 				{
 					Node parentItr = nodeStack.parent();
-					if (limit == true && window.Negate() <= parentItr.score)
+					if (limit == true && windowNega <= parentItr.score)
 					{
 						parentItr.score = childItr.score.Negate();
 					}
@@ -307,20 +313,21 @@ public abstract class Worker
 				board.Back(childItr.moves.front());
 
 				// スコアがwindowの外側だったら終わり
-				if (window != GlobalMembers.SCORE_NONE && (limit == false || childItr.score < window.Negate()))
+				if (window.score != Score.SCORE_UNVALUED && (limit == false || childItr.score < windowNega))
 				{
-//C++ TO C# CONVERTER TODO TASK: The following line was determined to contain a copy constructor call - this should be verified and a copy constructor should be created:
-//ORIGINAL LINE: Score windowTmp = window;
-					Score windowTmp = new Score(window);
-
-					if ((nodeStack.size() & 0x1) == 1)
+					if ((nodeStack.size() & 0x1) == 0)
 					{
-						windowTmp = window.Negate();
+						if (window < childItr.score)
+						{
+							childItr.moves.clear();
+						}
 					}
-
-					if (windowTmp < childItr.score)
+					else
 					{
-						childItr.moves.clear();
+						if (windowNega < childItr.score)
+						{
+							childItr.moves.clear();
+						}
 					}
 				}
 
@@ -328,7 +335,7 @@ public abstract class Worker
 				if (1 < childItr.moves.size())
 				{
 					childItr.moves.pop_front();
-					childItr.score = new Score(GlobalMembers.SCORE_NONE);
+					childItr.score.clear();
 					break;
 				}
 

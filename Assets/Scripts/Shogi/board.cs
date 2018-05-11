@@ -50,7 +50,7 @@ public partial class MoveList
 	}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: size_t size() const
-	public uint size()
+	public size_t size()
 	{
 		return list.Length;
 	}
@@ -83,6 +83,14 @@ public partial class MoveList
 #elif USE_PRIORITY == PRIORITY_BUFFER
 public partial class MoveList
 {
+	public void copy(MoveList moveList)
+	{
+		int offset = moveList.first;
+//C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
+        Array.Copy(moveList.list, offset, list, offset, moveList.size());
+        first = moveList.first;
+		last = moveList.last;
+	}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool empty() const
 	public bool empty()
@@ -231,7 +239,7 @@ public class Board
 				}
 				else
 				{
-					char type;
+                    char type;
 					Player player = PlayerDef.NONE;
 					if (c[0] == (sbyte)'^')
 					{
@@ -332,9 +340,9 @@ public class Board
 		return sout;
 	}
 
-	public MoveList GetMoveList()
+	public MoveList GetMoveList(MoveList moveList)
 	{
-		MoveList moveList = new MoveList();
+		moveList.clear();
 
 		uchar lineMax = new uchar();
 		uchar lineMin = new uchar();
