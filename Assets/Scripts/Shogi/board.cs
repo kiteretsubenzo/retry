@@ -632,6 +632,7 @@ public class Board
 					y = j - 1;
 					while (true)
 					{
+
 						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
 						{
 							break;
@@ -1350,10 +1351,16 @@ public class Board
 		return false;
 	}
 
-	protected CELL GetCell(int x, int y)
+	public CELL GetCell(int x, int y)
 	{
 		return matrix[y, x];
 	}
+
+    public Player GetPlayer()
+    {
+        return turn;
+    }
+
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool GetCell(int tox, int toy, CELL &cell) const
 	protected bool GetCell(int tox, int toy, ref CELL cell)
@@ -1368,7 +1375,12 @@ public class Board
 		return true;
 	}
 
-	protected void SwitchTurn()
+    public uchar GetReserve(Player player, Pawn pawn)
+    {
+        return captured[player, pawn];
+    }
+
+    protected void SwitchTurn()
 	{
 		if (turn == PlayerDef.FIRST)
 		{
@@ -1391,7 +1403,7 @@ public class Board
 	private uchar[] gyokux = new uchar[PlayerDef.MAX];
 	private uchar[] gyokuy = new uchar[PlayerDef.MAX];
 
-	private static void Upgrade(ref Pawn type)
+	public static void Upgrade(ref Pawn type)
 	{
 		type |= 0x08;
 	}
@@ -1399,11 +1411,11 @@ public class Board
 	{
 		type &= 0x07;
 	}
-	private static Pawn Down(Pawn type)
+	public static Pawn Down(Pawn type)
 	{
 		return (Pawn)(type & 0x07);
 	}
-	private static bool IsUpgrade(Pawn type)
+	public static bool IsUpgrade(Pawn type)
 	{
 		return ((type & 0x08) != 0);
 	}

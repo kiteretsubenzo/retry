@@ -3,7 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PawnKyoh
+  - PawnKei
+  - PawnHi
+  - PawnOh
+  - PawnGyoku
+  - PawnGin
+  - PawnKin
+  - PawnKaku
+  - PawnHu
   layers:
   - Default
   - TransparentFX
@@ -13,8 +22,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Cell
+  - Pawn
   - 
   - 
   - 
