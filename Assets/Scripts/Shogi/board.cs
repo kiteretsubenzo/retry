@@ -85,11 +85,11 @@ public partial class MoveList
 {
 	public void copy(MoveList moveList)
 	{
-		int offset = moveList.first;
+        int offset = moveList.first;
 //C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
         Array.Copy(moveList.list, offset, list, offset, moveList.size());
         first = moveList.first;
-		last = moveList.last;
+        last = moveList.last;
 	}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool empty() const
@@ -239,9 +239,9 @@ public class Board
 				}
 				else
 				{
-                    char type;
+					char type;
 					Player player = PlayerDef.NONE;
-					if (c[0] == (sbyte)'^')
+					if (c[0] == '^')
 					{
 						player = PlayerDef.FIRST;
 						type = c[1];
@@ -254,7 +254,7 @@ public class Board
 					matrix[j - 1, i].player = player;
 					matrix[j - 1, i].pawn = GlobalMembers.charToPawn[type];
 
-					if (type == (sbyte)'o')
+					if (type == 'o')
 					{
 						gyokux[player] = (uchar)(i);
 						gyokuy[player] = (uchar)(j - 1);
@@ -387,26 +387,34 @@ public class Board
 				case PawnDef.HU:
 					x = i;
 					y = j + forward;
-					if (y != lineTop)
-					{
-						AddMove(PawnDef.NONE, i, j, x, y, false, moveList);
-					}
-					if (lineMin <= y && y <= lineMax)
+					if (y == lineTop || y == lineMid)
 					{
 						AddMove(PawnDef.NONE, i, j, x, y, true, moveList);
+					}
+					else
+					{
+						AddMove(PawnDef.NONE, i, j, x, y, false, moveList);
+						if (lineMin <= y && y <= lineMax)
+						{
+							AddMove(PawnDef.NONE, i, j, x, y, true, moveList);
+						}
 					}
 					break;
 				case PawnDef.KYOH:
 					y = j + forward;
 					for (bool ret = true; 0 < y && y <= BoardDef.HEIGHT && ret; y += forward)
 					{
-						if (y != lineTop)
-						{
-							ret &= AddMove(PawnDef.NONE, i, j, i, y, false, moveList);
-						}
-						if (lineMin <= y && y <= lineMax)
+						if (y == lineTop || y == lineMid)
 						{
 							ret &= AddMove(PawnDef.NONE, i, j, i, y, true, moveList);
+						}
+						else
+						{
+							ret &= AddMove(PawnDef.NONE, i, j, i, y, false, moveList);
+							if (lineMin <= y && y <= lineMax)
+							{
+								ret &= AddMove(PawnDef.NONE, i, j, i, y, true, moveList);
+							}
 						}
 					}
 					break;
@@ -457,16 +465,16 @@ public class Board
 					y = j + 1;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if ((lineMin <= y && y <= lineMax) || (lineMin <= j && j <= lineMax))
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						x++;
 						y++;
@@ -475,16 +483,16 @@ public class Board
 					y = j - 1;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if ((lineMin <= y && y <= lineMax) || (lineMin <= j && j <= lineMax))
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						x++;
 						y -= 1;
@@ -493,16 +501,16 @@ public class Board
 					y = j + 1;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if ((lineMin <= y && y <= lineMax) || (lineMin <= j && j <= lineMax))
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						x -= 1;
 						y++;
@@ -511,16 +519,16 @@ public class Board
 					y = j - 1;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if ((lineMin <= y && y <= lineMax) || (lineMin <= j && j <= lineMax))
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						x -= 1;
 						y -= 1;
@@ -581,16 +589,16 @@ public class Board
 					y = j;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if (lineMin <= j && j <= lineMax)
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						x++;
 					}
@@ -598,16 +606,16 @@ public class Board
 					y = j;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if (lineMin <= j && j <= lineMax)
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						x -= 1;
 					}
@@ -615,16 +623,16 @@ public class Board
 					y = j + 1;
 					while (true)
 					{
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if ((lineMin <= y && y <= lineMax) || (lineMin <= j && j <= lineMax))
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						y++;
 					}
@@ -632,17 +640,16 @@ public class Board
 					y = j - 1;
 					while (true)
 					{
-
-						if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
-						{
-							break;
-						}
-						if (lineMin <= y && y <= lineMax)
+						if ((lineMin <= y && y <= lineMax) || (lineMin <= j && j <= lineMax))
 						{
 							if (AddMove(PawnDef.NONE, i, j, x, y, true, moveList) == false)
 							{
 								break;
 							}
+						}
+						else if (AddMove(PawnDef.NONE, i, j, x, y, false, moveList) == false)
+						{
+							break;
 						}
 						y -= 1;
 					}
@@ -1355,12 +1362,6 @@ public class Board
 	{
 		return matrix[y, x];
 	}
-
-    public Player GetPlayer()
-    {
-        return turn;
-    }
-
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool GetCell(int tox, int toy, CELL &cell) const
 	protected bool GetCell(int tox, int toy, ref CELL cell)
@@ -1375,12 +1376,17 @@ public class Board
 		return true;
 	}
 
-    public uchar GetReserve(Player player, Pawn pawn)
-    {
-        return captured[player, pawn];
-    }
+	public  Player GetPlayer()
+	{
+		return turn;
+	}
 
-    protected void SwitchTurn()
+	public  uchar GetReserve(Player player, Pawn pawn)
+	{
+		return captured[player, pawn];
+	}
+
+	protected void SwitchTurn()
 	{
 		if (turn == PlayerDef.FIRST)
 		{
@@ -1394,6 +1400,27 @@ public class Board
 		}
 	}
 
+    public static void Upgrade(ref Pawn type)
+	{
+		type |= 0x08;
+	}
+    public static void Downgrade(ref Pawn type)
+	{
+		type &= 0x07;
+	}
+    public static Pawn Down(Pawn type)
+	{
+		return (Pawn)(type & 0x07);
+	}
+    public static bool IsUpgrade(Pawn type)
+	{
+		return ((type & 0x08) != 0);
+	}
+    public static bool IsGyokuKinUpgrade(Pawn type)
+	{
+		return (PawnDef.KIN <= type);
+	}
+
 	protected CELL[,] matrix = new CELL[BoardDef.HEIGHT + 2, BoardDef.WIDTH + 2];
 	protected Player turn = new Player();
 	protected Player enemy = new Player();
@@ -1402,25 +1429,4 @@ public class Board
 
 	private uchar[] gyokux = new uchar[PlayerDef.MAX];
 	private uchar[] gyokuy = new uchar[PlayerDef.MAX];
-
-	public static void Upgrade(ref Pawn type)
-	{
-		type |= 0x08;
-	}
-	private static void Downgrade(ref Pawn type)
-	{
-		type &= 0x07;
-	}
-	public static Pawn Down(Pawn type)
-	{
-		return (Pawn)(type & 0x07);
-	}
-	public static bool IsUpgrade(Pawn type)
-	{
-		return ((type & 0x08) != 0);
-	}
-	private static bool IsGyokuKinUpgrade(Pawn type)
-	{
-		return (PawnDef.KIN <= type);
-	}
 }

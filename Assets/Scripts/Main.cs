@@ -273,7 +273,7 @@ first";
                 moveListTmp.pop_front();
             }
 
-            foreach(Move moveTmp in moveList)
+            foreach (Move moveTmp in moveList)
             {
                 GameObject highlight = IndexToCell(moveTmp.to.x, moveTmp.to.y);
                 highlight.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -281,7 +281,7 @@ first";
 
             step = "select";
         }
-        else if(step == "select")
+        else if (step == "select")
         {
             board.GetMoveList(moveListTmp);
             List<Move> moveList = new List<Move>();
@@ -323,18 +323,44 @@ first";
             {
                 UpgradeObject.SetActive(true);
                 step = "upgrade";
+                return;
             }
-            else
+
+            if (moveList.Count == 0)
             {
-                if (0 < moveList.Count)
-                {
-                    Debug.Log("move");
-                    BoardMove(selectMove);
-                }
+                // 選択キャンセル
                 selectMove = new Move(GlobalMembers.MOVE_ZERO);
                 ResetHighlight();
                 step = "idle";
+                return;
             }
+
+            if (moveList[0].upgrade == true)
+            {
+                int top = 0;
+                if (board.GetPlayer() == PlayerDef.SECOND)
+                {
+                    top = BoardDef.HEIGHT;
+                }
+                if( (selectMove.from.pawn == PawnDef.HU && selectMove.to.y != top) ||
+                    (selectMove.from.pawn == PawnDef.KYOH && selectMove.to.y != top) ||
+                    selectMove.from.pawn == PawnDef.KAKU || selectMove.from.pawn == PawnDef.HI
+                    )
+                {
+                    // 成らない事もできる
+                    UpgradeObject.SetActive(true);
+                    step = "upgrade";
+                    return;
+                }
+            }
+
+            Debug.Log("move");
+            selectMove.upgrade = moveList[0].upgrade;
+            BoardMove(selectMove);
+
+            selectMove = new Move(GlobalMembers.MOVE_ZERO);
+            ResetHighlight();
+            step = "idle";
         }
     }
 

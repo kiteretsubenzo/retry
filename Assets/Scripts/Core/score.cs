@@ -193,13 +193,12 @@ public class Score
 		LinkedList<string> moves = Json.fromJsonArray(strs["moves"]);
 		moveList.clear();
         LinkedListNode<string> ite = moves.First;
-
-        while( ite != null )
-		{
+        while (ite != null)
+        {
 //C++ TO C# CONVERTER TODO TASK: Iterators are only converted within the context of 'while' and 'for' loops:
-			moveList.push_back(new Move(ite.Value));
+            moveList.push_back(new Move(ite.Value));
             ite = ite.Next;
-		}
+        }
 	}
 
 	public void setScore(int scoreValue)
