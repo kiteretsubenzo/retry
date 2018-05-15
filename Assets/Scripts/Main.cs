@@ -249,15 +249,6 @@ first";
         CELL cell = board.GetCell(x, y);
         if (step == "idle")
         {
-            if (cell.player != board.GetPlayer())
-            {
-                return;
-            }
-
-            selectMove.from.x = (uchar)x;
-            selectMove.from.y = (uchar)y;
-            selectMove.from.pawn = cell.pawn;
-
             board.GetMoveList(moveListTmp);
             List<Move> moveList = new List<Move>();
 
@@ -265,13 +256,22 @@ first";
             {
                 Move move = moveListTmp.front();
 
-                if (move.from.x == selectMove.from.x && move.from.y == selectMove.from.y)
+                if (move.from.x == x && move.from.y == y)
                 {
                     moveList.Add(move);
                 }
 
                 moveListTmp.pop_front();
             }
+
+            if(moveList.Count == 0)
+            {
+                return;
+            }
+
+            selectMove.from.x = (uchar)x;
+            selectMove.from.y = (uchar)y;
+            selectMove.from.pawn = cell.pawn;
 
             foreach (Move moveTmp in moveList)
             {
@@ -373,8 +373,6 @@ first";
                 return;
             }
 
-            selectMove.reserve = pawn;
-
             board.GetMoveList(moveListTmp);
             List<Move> moveList = new List<Move>();
 
@@ -382,13 +380,20 @@ first";
             {
                 Move move = moveListTmp.front();
 
-                if (move.reserve == selectMove.reserve)
+                if (move.reserve == pawn)
                 {
                     moveList.Add(move);
                 }
 
                 moveListTmp.pop_front();
             }
+
+            if( moveList.Count == 0 )
+            {
+                return;
+            }
+
+            selectMove.reserve = pawn;
 
             foreach (Move moveTmp in moveList)
             {

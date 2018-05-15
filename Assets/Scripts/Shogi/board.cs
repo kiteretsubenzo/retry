@@ -16,6 +16,7 @@ using uchar = System.SByte;
 using Pawn = System.SByte;
 using Player = System.SByte;
 
+
 //C++ TO C# CONVERTER NOTE: The following #define macro was replaced in-line:
 //ORIGINAL LINE: #define USE_PRIORITY PRIORITY_BUFFER
 
@@ -90,10 +91,10 @@ public partial class MoveList
         Array.Copy(moveList.list, offset, list, offset, moveList.size());
         first = moveList.first;
         last = moveList.last;
-	}
+    }
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool empty() const
-	public bool empty()
+    public bool empty()
 	{
 		return first == last;
 	}
@@ -888,6 +889,55 @@ public class Board
 		return priority;
 	}
 
+	public CELL GetCell(int x, int y)
+	{
+		return matrix[y, x];
+	}
+//C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
+//ORIGINAL LINE: bool GetCell(int tox, int toy, CELL &cell) const
+	public bool GetCell(int tox, int toy, ref CELL cell)
+	{
+		if (matrix[toy, tox].player != turn)
+		{
+			return false;
+		}
+
+		cell = matrix[toy, tox];
+
+		return true;
+	}
+
+	public Player GetPlayer()
+	{
+		return turn;
+	}
+
+	public uchar GetReserve(Player player, Pawn pawn)
+	{
+		return captured[player, pawn];
+	}
+
+	public static void Upgrade(ref Pawn type)
+	{
+		type |= 0x08;
+	}
+	public static void Downgrade(ref Pawn type)
+	{
+		type &= 0x07;
+	}
+	public static Pawn Down(Pawn type)
+	{
+		return (Pawn)(type & 0x07);
+	}
+	public static bool IsUpgrade(Pawn type)
+	{
+		return ((type & 0x08) != 0);
+	}
+	public static bool IsGyokuKinUpgrade(Pawn type)
+	{
+		return (PawnDef.KIN <= type);
+	}
+
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: void PrintBoard() const
 	public void PrintBoard()
@@ -1358,34 +1408,6 @@ public class Board
 		return false;
 	}
 
-	public CELL GetCell(int x, int y)
-	{
-		return matrix[y, x];
-	}
-//C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
-//ORIGINAL LINE: bool GetCell(int tox, int toy, CELL &cell) const
-	protected bool GetCell(int tox, int toy, ref CELL cell)
-	{
-		if (matrix[toy, tox].player != turn)
-		{
-			return false;
-		}
-
-		cell = matrix[toy, tox];
-
-		return true;
-	}
-
-	public  Player GetPlayer()
-	{
-		return turn;
-	}
-
-	public  uchar GetReserve(Player player, Pawn pawn)
-	{
-		return captured[player, pawn];
-	}
-
 	protected void SwitchTurn()
 	{
 		if (turn == PlayerDef.FIRST)
@@ -1398,27 +1420,6 @@ public class Board
 			turn = PlayerDef.FIRST;
 			enemy = PlayerDef.SECOND;
 		}
-	}
-
-    public static void Upgrade(ref Pawn type)
-	{
-		type |= 0x08;
-	}
-    public static void Downgrade(ref Pawn type)
-	{
-		type &= 0x07;
-	}
-    public static Pawn Down(Pawn type)
-	{
-		return (Pawn)(type & 0x07);
-	}
-    public static bool IsUpgrade(Pawn type)
-	{
-		return ((type & 0x08) != 0);
-	}
-    public static bool IsGyokuKinUpgrade(Pawn type)
-	{
-		return (PawnDef.KIN <= type);
 	}
 
 	protected CELL[,] matrix = new CELL[BoardDef.HEIGHT + 2, BoardDef.WIDTH + 2];
