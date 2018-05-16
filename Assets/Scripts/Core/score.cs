@@ -28,7 +28,7 @@ public class ScoreMoveList
 	{
 //C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
         Array.Copy(moveListValue.moveList, moveList, moveListValue.size());
-		index = moveListValue.index;
+        index = moveListValue.index;
 	}
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
@@ -78,6 +78,10 @@ public class ScoreMoveList
 			if (ImpliedObject.moveList[i] < rhs.moveList[i])
 			{
 				return true;
+			}
+			if (ImpliedObject.moveList[i] > rhs.moveList[i])
+			{
+				return false;
 			}
 		}
 		return false;
@@ -193,15 +197,16 @@ public class Score
 		LinkedList<string> moves = Json.fromJsonArray(strs["moves"]);
 		moveList.clear();
         LinkedListNode<string> ite = moves.First;
+
         while (ite != null)
         {
 //C++ TO C# CONVERTER TODO TASK: Iterators are only converted within the context of 'while' and 'for' loops:
             moveList.push_back(new Move(ite.Value));
             ite = ite.Next;
         }
-	}
+    }
 
-	public void setScore(int scoreValue)
+    public void setScore(int scoreValue)
 	{
 		score = scoreValue;
 		moveList.clear();

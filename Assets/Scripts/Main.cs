@@ -169,10 +169,7 @@ first";
         Debug.Log("Up");
         selectMove.upgrade = true;
         BoardMove(selectMove);
-        selectMove = new Move(GlobalMembers.MOVE_ZERO);
-        UpgradeObject.SetActive(false);
-        ResetHighlight();
-        step = "idle";
+        TurnEnd();
     }
 
     public void ClickStay()
@@ -180,10 +177,7 @@ first";
         Debug.Log("Stay");
         selectMove.upgrade = false;
         BoardMove(selectMove);
-        selectMove = new Move(GlobalMembers.MOVE_ZERO);
-        UpgradeObject.SetActive(false);
-        ResetHighlight();
-        step = "idle";
+        TurnEnd();
     }
 
     private void CreatePawn(Player player, Pawn pawn, int i, int j)
@@ -357,10 +351,7 @@ first";
             Debug.Log("move");
             selectMove.upgrade = moveList[0].upgrade;
             BoardMove(selectMove);
-
-            selectMove = new Move(GlobalMembers.MOVE_ZERO);
-            ResetHighlight();
-            step = "idle";
+            TurnEnd();
         }
     }
 
@@ -519,26 +510,58 @@ first";
         }
     }
 
+    private void TurnEnd()
+    {
+        selectMove = new Move(GlobalMembers.MOVE_ZERO);
+        UpgradeObject.SetActive(false);
+        ResetHighlight();
+
+        if (board.GetPlayer() == PlayerDef.SECOND)
+        {
+            step = "ai";
+            StartCoroutine("Search");
+        }
+        else
+        {
+            step = "idle";
+        }
+    }
+
     private IEnumerator Search()
     {
-        Score aiScore = new Score(GlobalMembers.SCORE_NONE);
-
         ai.SetMode("scouttest");
-        ai.SetSearchScore(new Score(-Score.SCORE_WIN));
-        //ai.SetSearchScore(Score("{score:99999,moves:[n0701o0700Rf,k0000n0601nf]}"));
-        //ai.SetLimit(true);
         ai.SetDebug(false);
 
-        ai.Start(board);
+        Score aiScore = new Score();
+        Score prevScore = new Score(Score.SCORE_WIN);
+        //ai.SetSearchScore(Score("{score:99999,moves:[n0701o0700Rf,k0000n0601nf]}"));
+        ai.SetLimit(false);
 
-        while (ai.Tick() == false)
+        while (true)
         {
-            yield return null;
+            ai.SetSearchScore(prevScore);
+            ai.Start(board);
+
+            while (ai.Tick() == false)
+            {
+                yield return null;
+            }
+
+            ai.GetResult(out aiScore);
+            aiScore = aiScore.Negate();
+            Debug.Log((string)aiScore);
+            Debug.Log(aiScore.moveList.DebugString());
+
+            if(prevScore == aiScore)
+            {
+                break;
+            }
+            prevScore = aiScore;
         }
 
-        ai.GetResult(out aiScore);
-        Debug.Log((string)aiScore);
-        Debug.Log(aiScore.moveList.DebugString());
+        Move move = aiScore.moveList.front();
+        BoardMove(move);
+        TurnEnd();
     }
 
     private Board board;

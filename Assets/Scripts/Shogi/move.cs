@@ -41,11 +41,11 @@ public class Move
 //ORIGINAL LINE: bool operator <(const MovePawn& rhs) const
 		public static bool operator < (MovePawn ImpliedObject, MovePawn rhs)
 		{
-			if (ImpliedObject.x > rhs.x)
+			if (ImpliedObject.x < rhs.x)
 			{
 				return true;
 			}
-			if (ImpliedObject.x < rhs.x)
+			if (ImpliedObject.x > rhs.x)
 			{
 				return false;
 			}
@@ -280,3 +280,5 @@ public class Move
 
 	public int MOVES_MAX = (BoardDef.WIDTH + BoardDef.HEIGHT - 2) * BoardDef.WIDTH * BoardDef.HEIGHT * 2 + (PawnDef.CAPTURE_MAX - 1) * BoardDef.WIDTH * BoardDef.HEIGHT;
 }
+
+

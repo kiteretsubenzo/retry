@@ -94,9 +94,9 @@ public abstract class Worker
             {
                 nodeStack[i] = new Node();
             }
-		}
+        }
 
-		public void clear()
+        public void clear()
 		{
 			index = -1;
 		}
@@ -167,10 +167,10 @@ public abstract class Worker
 					str += ":EMPTY(" + (string)(ite.score) + ")";
 				}
 			}
-			Debug.Log(str);
-		}
+            Debug.Log(str);
+        }
 
-		private Node[] nodeStack = new Node[64];
+        private Node[] nodeStack = new Node[64];
 		private int index = -1;
 	}
 
@@ -267,15 +267,15 @@ public abstract class Worker
 				if (deep <= nodeStack.size())
 				{
 					// 新しい子が末端だったら追加せずに評価
-					// 評価
-					nodeStack.GetHistory(childItr.score.moveList);
 
-					// 親ノードに得点をマージ
+					// 親ノードに評価をマージ
 					if (limit == false || windowNega <= childItr.score)
 					{
 						scoreTmp.setScore(board.GetEvaluate(moveListTmp));
 						childItr.score = Score.Min(childItr.score, scoreTmp.Negate());
 					}
+
+					nodeStack.GetHistory(childItr.score.moveList);
 
 					break;
 				}

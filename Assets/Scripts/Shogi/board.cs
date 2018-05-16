@@ -90,11 +90,11 @@ public partial class MoveList
 //C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
         Array.Copy(moveList.list, offset, list, offset, moveList.size());
         first = moveList.first;
-        last = moveList.last;
-    }
+		last = moveList.last;
+	}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool empty() const
-    public bool empty()
+	public bool empty()
 	{
 		return first == last;
 	}
