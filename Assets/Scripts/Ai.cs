@@ -11,17 +11,19 @@ public class Ai {
         public Score window;
         public int deep;
         public Board board;
+        public Score limit;
 
-        public JOB(uint jobIdValue, List<Move> movesValue, Score windowValue, int deepValue, Board boardValue)
+        public JOB(uint jobIdValue, List<Move> movesValue, Score windowValue, int deepValue, Board boardValue, Score limitValue)
         {
             jobId = jobIdValue;
             moves = movesValue;
             window = windowValue;
             deep = deepValue;
             board = boardValue;
+            limit = limitValue;
         }
 
-        public JOB(uint jobIdValue, Move moveValue, Score windowValue, int deepValue, Board boardValue)
+        public JOB(uint jobIdValue, Move moveValue, Score windowValue, int deepValue, Board boardValue, Score limitValue)
         {
             jobId = jobIdValue;
             moves = new List<Move>();
@@ -29,6 +31,7 @@ public class Ai {
             window = windowValue;
             deep = deepValue;
             board = boardValue;
+            limit = limitValue;
         }
     };
 
@@ -43,7 +46,7 @@ public class Ai {
     public void SetBoard(Board boardValue) { board = boardValue; }
     public void SetMode(string modeValue) { mode = modeValue; }
     public void SetSearchScore(Score score) { searchScore = score; }
-    public void SetLimit(bool limitValue) { limit = limitValue; }
+    public void SetLimit(uint limitValue) { limit = limitValue; }
     public void SetDebug(bool debugValue) { debug = debugValue; }
     public void Start(Board boardValue)
     {
@@ -59,14 +62,23 @@ public class Ai {
             List<Move> moves = new List<Move>();
             moves.Add(GlobalMembers.MOVE_ZERO);
             bestScore = new Score(0);
-            JOB job = new JOB( GetJobId(), GlobalMembers.MOVE_ZERO, searchScore.Negate(), 4, board );
+            JOB job = new JOB( GetJobId(), GlobalMembers.MOVE_ZERO, searchScore.Negate(), 4, board, new Score());
             jobs.Add(job);
         }
         else if (mode == "minimax")
         {
             List<Move> moves = new List<Move>();
             moves.Add(GlobalMembers.MOVE_ZERO);
-            JOB job = new JOB(GetJobId(), moves, GlobalMembers.SCORE_NONE, 4, board);
+            JOB job = new JOB(GetJobId(), moves, GlobalMembers.SCORE_NONE, 4, board, new Score());
+            jobs.Add(job);
+        }
+        else if( mode == "probrem" )
+        {
+            List<Move> moves = new List<Move>();
+            moves.Add(GlobalMembers.MOVE_ZERO);
+            bestScore = new Score(0);
+            limitScore = new Score();
+            JOB job = new JOB(GetJobId(), GlobalMembers.MOVE_ZERO, searchScore.Negate(), 4, board, limitScore);
             jobs.Add(job);
         }
     }
@@ -95,14 +107,8 @@ public class Ai {
             job = "jobid:" + jobIdString;
             job += ",window:" + jobStruct.window.toJson();
             job += ",deep:" + jobStruct.deep.ToString();
-            if (limit)
-            {
-                job += ",limit:true";
-            }
-            else
-            {
-                job += ",limit:false";
-            }
+            job += ",limit:" + jobStruct.limit.toJson();
+
             if (debug)
             {
                 job += ",debug:true";
@@ -159,7 +165,7 @@ public class Ai {
                 else
                 {
                     bestScore = score;
-                    JOB job = new JOB(GetJobId(), GlobalMembers.MOVE_ZERO, bestScore.Negate(), 4, board);
+                    JOB job = new JOB(GetJobId(), GlobalMembers.MOVE_ZERO, bestScore.Negate(), 4, board, new Score());
                     jobs.Add(job);
                 }
             }
@@ -180,6 +186,35 @@ public class Ai {
                 if (bestScore < score.Negate())
                 {
                     bestScore = score.Negate();
+                }
+            }
+            else if (mode == "probrem")
+            {
+                //if (debug)
+                //{
+                    Debug.Log("score is " + (string)score + " best score is " + (string)bestScore);
+                //}
+
+                if (bestScore == score)
+                {
+                    if (0 < limit)
+                    {
+                        bestScore = score;
+                        limitScore = score;
+                        JOB job = new JOB(GetJobId(), GlobalMembers.MOVE_ZERO, bestScore, 4, board, limitScore);
+                        jobs.Add(job);
+                        limit--;
+                    }
+                    else
+                    {
+                        bestScore = score.Negate();
+                    }
+                }
+                else
+                {
+                    bestScore = score;
+                    JOB job = new JOB(GetJobId(), GlobalMembers.MOVE_ZERO, bestScore, 4, board, limitScore);
+                    jobs.Add(job);
                 }
             }
 
@@ -208,10 +243,11 @@ public class Ai {
 
     private string mode = "minimax";
     private Score searchScore = new Score(int.MinValue);
-    private bool limit = false;
+    private uint limit = 0;
     private bool debug = true;
 
-    private Score bestScore = new Score(GlobalMembers.SCORE_NONE);
+    private Score bestScore = new Score();
+    private Score limitScore = new Score();
 
     private List<AiWorker> workers = new List<AiWorker>();
 

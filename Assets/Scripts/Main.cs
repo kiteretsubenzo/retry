@@ -21,7 +21,7 @@ public class Main : MonoBehaviour {
 	void Start () {
         ai = new Ai();
         ai.AddWorker(ref ai);
-
+        /*
         string str = @"h18 y04 e04 g04 u00 r00 k03
  . . . . . . . . .
  . . . . . .r_ . .
@@ -34,6 +34,34 @@ public class Main : MonoBehaviour {
  . . . . . . . . .
 h00 y00 e00 g00 u00 r00 k01
 first";
+        */
+        /*
+        string str = @"h16 y02 e04 g04 u02 r01 k03
+ . . . . .^R . .y_
+ . . . . . . .o_h_
+ . . . . . . . . .
+ . . . . . . .h_ .
+ . . . . . . .^h .
+ . . . . . .^y . .
+ . . . . . . . . .
+ . . . . . . . . .
+ . . . . . . . . .
+h00 y00 e00 g00 u00 r00 k01
+first";
+        */
+        string str = @"h16 y02 e04 g04 u02 r01 k03
+ . . . . . . .^Ry_
+ . . . . . . . .h_
+ . . . . . . . .o_
+ . . . . . . .h_ .
+ . . . . . . .^h .
+ . . . . . .^y . .
+ . . . . . . . . .
+ . . . . . . . . .
+ . . . . . . . . .
+h00 y00 e00 g00 u00 r00 k01
+first";
+
         Debug.Log(str);
         board = new Board();
         board.Init(str);
@@ -159,7 +187,6 @@ first";
         {
             int x, y;
             CellToIndex(cell, out x, out y);
-            Debug.Log(x + ":" + y);
             SelectPawn(x, y);
         }
     }
@@ -533,31 +560,21 @@ first";
         ai.SetDebug(false);
 
         Score aiScore = new Score();
-        Score prevScore = new Score(Score.SCORE_WIN);
         //ai.SetSearchScore(Score("{score:99999,moves:[n0701o0700Rf,k0000n0601nf]}"));
-        ai.SetLimit(false);
+        ai.SetSearchScore(new Score(Score.SCORE_WIN));
+        //ai.SetSearchScore(new Score());
+        ai.SetLimit(0);
+        ai.Start(board);
 
-        while (true)
+        while (ai.Tick() == false)
         {
-            ai.SetSearchScore(prevScore);
-            ai.Start(board);
-
-            while (ai.Tick() == false)
-            {
-                yield return null;
-            }
-
-            ai.GetResult(out aiScore);
-            aiScore = aiScore.Negate();
-            Debug.Log((string)aiScore);
-            Debug.Log(aiScore.moveList.DebugString());
-
-            if(prevScore == aiScore)
-            {
-                break;
-            }
-            prevScore = aiScore;
+            yield return null;
         }
+
+        ai.GetResult(out aiScore);
+        aiScore = aiScore.Negate();
+        Debug.Log((string)aiScore);
+        Debug.Log(aiScore.moveList.DebugString());
 
         Move move = aiScore.moveList.front();
         BoardMove(move);

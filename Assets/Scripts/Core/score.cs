@@ -29,11 +29,11 @@ public class ScoreMoveList
 //C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
         Array.Copy(moveListValue.moveList, moveList, moveListValue.size());
         index = moveListValue.index;
-	}
+    }
 
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: uint size() const
-	public uint size()
+    public uint size()
 	{
 		return (uint)(index + 1);
 	}
@@ -154,8 +154,8 @@ public class ScoreMoveList
 		return str;
 	}
 
-	private Move[] moveList = new Move[64];
-	private int index = -1;
+	public Move[] moveList = new Move[64];
+	public int index = -1;
 }
 
 public class Score
@@ -197,7 +197,6 @@ public class Score
 		LinkedList<string> moves = Json.fromJsonArray(strs["moves"]);
 		moveList.clear();
         LinkedListNode<string> ite = moves.First;
-
         while (ite != null)
         {
 //C++ TO C# CONVERTER TODO TASK: Iterators are only converted within the context of 'while' and 'for' loops:
@@ -206,7 +205,7 @@ public class Score
         }
     }
 
-    public void setScore(int scoreValue)
+	public void setScore(int scoreValue)
 	{
 		score = scoreValue;
 		moveList.clear();
@@ -237,6 +236,60 @@ public class Score
 				return lhs;
 			}
 			return rhs;
+		}
+
+		if (lhs.score == SCORE_UNVALUED)
+		{
+			return rhs;
+		}
+
+		return lhs;
+	}
+
+	// rhs�͔j�󂳂�܂�
+	public static Score NegaAndMin(Score lhs, Score rhs)
+	{
+		rhs.score *= -1;
+
+		if (lhs.score != SCORE_UNVALUED && rhs.score != SCORE_UNVALUED)
+		{
+			if (lhs.score < rhs.score)
+			{
+				return lhs;
+			}
+			if (lhs.score > rhs.score)
+			{
+				return rhs;
+			}
+
+			if (lhs.moveList < rhs.moveList)
+			{
+				return rhs;
+			}
+
+
+			if (lhs.moveList.size() > rhs.moveList.size())
+			{
+				return lhs;
+			}
+			if (lhs.moveList.size() < rhs.moveList.size())
+			{
+				return rhs;
+			}
+
+			for (uint i = 0; i < lhs.moveList.size(); i++)
+			{
+				if (lhs.moveList.moveList[i] < rhs.moveList.moveList[i])
+				{
+					return rhs;
+				}
+				if (lhs.moveList.moveList[i] > rhs.moveList.moveList[i])
+				{
+					return lhs;
+				}
+			}
+
+			return lhs;
 		}
 
 		if (lhs.score == SCORE_UNVALUED)

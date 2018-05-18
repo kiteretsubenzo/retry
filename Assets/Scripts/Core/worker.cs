@@ -88,14 +88,14 @@ public abstract class Worker
 
 	private class NodeStack
 	{
-		public NodeStack()
-		{
+        public NodeStack()
+        {
             for( int i=0; i<nodeStack.Length; i++ )
             {
                 nodeStack[i] = new Node();
             }
         }
-
+ 
         public void clear()
 		{
 			index = -1;
@@ -187,7 +187,7 @@ public abstract class Worker
 	private Score window = new Score();
 	private Score windowNega = new Score();
 	private uint deep = 0;
-	private bool limit = false;
+	private Score limit = new Score();
 
 	//std::list<Node> nodeStack;
 	private NodeStack nodeStack = new NodeStack();
@@ -222,7 +222,15 @@ public abstract class Worker
 		windowNega = window.Negate();
 
 		deep = uint.Parse(deepStr);
-		limit = (limitStr == "true");
+
+		if (limitStr != "")
+		{
+			limit = new Score(limitStr);
+		}
+		else
+		{
+			limit.clear();
+		}
 
 		nodeStack.clear();
 		// ルート
@@ -269,10 +277,10 @@ public abstract class Worker
 					// 新しい子が末端だったら追加せずに評価
 
 					// 親ノードに評価をマージ
-					if (limit == false || windowNega <= childItr.score)
+					if (limit.score == Score.SCORE_UNVALUED || limit <= childItr.score)
 					{
 						scoreTmp.setScore(board.GetEvaluate(moveListTmp));
-						childItr.score = Score.Min(childItr.score, scoreTmp.Negate());
+						childItr.score = Score.NegaAndMin(childItr.score, scoreTmp);
 					}
 
 					nodeStack.GetHistory(childItr.score.moveList);
@@ -299,13 +307,29 @@ public abstract class Worker
 				if (2 <= nodeStack.size())
 				{
 					Node parentItr = nodeStack.parent();
-					if (limit == true && windowNega <= parentItr.score)
+					if (limit.score != Score.SCORE_UNVALUED)
 					{
-						parentItr.score = childItr.score.Negate();
+						if (childItr.score.Negate() < limit)
+						{
+							if (parentItr.score.score == Score.SCORE_UNVALUED || limit <= parentItr.score)
+							{
+								parentItr.score = childItr.score.Negate();
+							}
+							else
+							{
+//C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
+//ORIGINAL LINE: scoreTmp = childItr.score;
+								scoreTmp.CopyFrom(childItr.score);
+								parentItr.score.CopyFrom(Score.NegaAndMin(parentItr.score, scoreTmp));
+							}
+						}
 					}
 					else
 					{
-						parentItr.score = Score.Min(parentItr.score, childItr.score.Negate());
+                        //C++ TO C# CONVERTER TODO TASK: The following line was determined to be a copy assignment (rather than a reference assignment) - this should be verified and a 'CopyFrom' method should be created:
+                        //ORIGINAL LINE: scoreTmp = childItr.score;
+                        scoreTmp.CopyFrom(childItr.score);
+						parentItr.score.CopyFrom(Score.NegaAndMin(parentItr.score, scoreTmp));
 					}
 				}
 
@@ -313,7 +337,7 @@ public abstract class Worker
 				board.Back(childItr.moves.front());
 
 				// スコアがwindowの外側だったら終わり
-				if (window.score != Score.SCORE_UNVALUED && (limit == false || childItr.score < windowNega))
+				if (window.score != Score.SCORE_UNVALUED && (limit.score == Score.SCORE_UNVALUED || childItr.score < limit))
 				{
 					if ((nodeStack.size() & 0x1) == 0)
 					{

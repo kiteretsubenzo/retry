@@ -16,7 +16,6 @@ using uchar = System.SByte;
 using Pawn = System.SByte;
 using Player = System.SByte;
 
-
 //C++ TO C# CONVERTER NOTE: The following #define macro was replaced in-line:
 //ORIGINAL LINE: #define USE_PRIORITY PRIORITY_BUFFER
 
@@ -90,7 +89,7 @@ public partial class MoveList
 //C++ TO C# CONVERTER TODO TASK: The memory management function 'memcpy' has no equivalent in C#:
         Array.Copy(moveList.list, offset, list, offset, moveList.size());
         first = moveList.first;
-		last = moveList.last;
+        last = moveList.last;
 	}
 //C++ TO C# CONVERTER WARNING: 'const' methods are not available in C#:
 //ORIGINAL LINE: bool empty() const
@@ -233,7 +232,7 @@ public class Board
 			for (int i = 1; i <= BoardDef.WIDTH; i++)
 			{
 				char[] c = {strs[j - 1][(i - 1) * 2], strs[j - 1][(i - 1) * 2 + 1]};
-				if (c[0] == (sbyte)' ')
+				if (c[0] == ' ')
 				{
 					matrix[j - 1, i].player = PlayerDef.NONE;
 					matrix[j - 1, i].pawn = PawnDef.NONE;
